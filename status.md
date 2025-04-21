@@ -2,15 +2,15 @@
 
 #### Your name
 
-TODO
+Cole Thomas
 
 #### Your section leader's name
 
-TODO
+Kora Sen
 
 #### Project title
 
-TODO
+Survive the Island
 
 ***
 
@@ -18,12 +18,11 @@ Short answers for the below questions suffice. If you want to alter your plan fo
 
 #### What have you done for your project so far?
 
-TODO
-
+I have the plan ans structure. I have the code writtin out.
 #### What have you not done for your project yet?
 
-TODO
+I just have to transfer it to ren py and figure out how to add visuals and gameplay.
 
 #### What problems, if any, have you encountered?
 
-TODO
+Figuring out how to use Ren.py and the other coponents to make the game look like an actual game.
