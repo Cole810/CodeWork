@@ -1,0 +1,1198 @@
+#Code in Python/Idle
+print("Welcome to the Survival Island \n You will be put to multiple different trials to test your survival skills.")
+score = 0
+hunger = 6
+lives = 2
+weaponlevel = 0
+materials = []
+days = 0
+shelterlevel = 0
+luck = 0
+import random
+import sys
+def randy():
+    global luck
+    luck = random.randint(1, 4)
+
+def check():
+    if hunger < 1 or lives < 0:
+        print("Game over.")
+        print("Final stats -> Days Survived:", days,
+              "Materials:", materials,
+              "Weapon Level:", weaponlevel,"Shelter Level:", shelterlevel)
+        sys.exit()
+    else:
+        pass
+
+def update():
+    print("End of day stats -> Hunger:", hunger,
+          "Lives:", lives, "WeaponLevel:", weaponlevel, "Shelter Level:", shelterlevel)
+def start():
+    global lives, weaponlevel, materials, score, hunger, days, shelterlevel
+    print("Before starting the game, please enter all your answers in lowercase. All your answers should be 1 word as described in the prompt\n. Failure to do so may result in loss of hunger/lives")
+    print("Welcome to Punk Hazard, a completely uncivilized island.")
+    print("You are abandoned alone with a water bottle and flint and you are uncertain when help will arrive.")
+    print("You start with two lives and a hunger level of six.")
+    print("If your lives or hunger reach zero, the game ends, so be mindful.")
+    print("As you wash up on shore you notice how beautiful and deserted the island is. Then you proceed to enter the forest")
+    print("While on this path, you find a river(fresh water source) and you decide to set up camp here.")
+    print("On your quest to make a shelter you see uprooted trees from a storm which could make a good shelter,")
+    print("and scattered rocks and stones across the island.\n")
+    print("You also think you could possibly find better alternatives if you keep looking")
+    valid = ("tree", "rock", "nothing", "both")
+    choice = ""
+    while choice not in valid:
+        choice = input("What will you choose to do: tree, rock, nothing, or both? ")
+        if choice not in valid:
+            print("Invalid choice. Please enter exactly one of: tree, rock, nothing, both.")
+    
+
+    if choice == "tree":
+        print("After gathering broken tree branches, you build a solid shelter.")
+        print("You also find a dead family of squirrels you can use for food.")
+        score += 500
+        hunger += 3
+        shelterlevel += 5
+        print("After finding food, you use the flint to build a fire and cook your meal.")
+        print("You go to sleep well-fed.")
+    
+    elif choice == "rock":
+        print("You decide to build your shelter with rocks.")
+        print("It provides a strong structure, though there are some leaks. You also find some berries underneath rocks.")
+        score += 300
+        hunger += 2
+        shelterlevel += 3
+    
+    elif choice == "nothing":
+        print("While searching for better materials you were unimpressed; you decide to seek refuge in a cave and use it as a base.")
+        score += 100
+        hunger -= 3
+        shelterlevel += 10
+        print("Unfortunately since it took a long time to find shelter, you go to bed hungry.")
+    
+    elif choice == "both":
+        print("You craft an epic shelter with both trees and rocks.")
+        print("You also fashion a dagger for a weapon.")
+        score += 500
+        hunger -= 4
+        weaponlevel += 5
+        shelterlevel += 8
+        materials.append("dagger")
+    
+    days += 1
+    print("Current status -> Days Survived:", days,
+          "Hunger:", hunger,
+          "Lives:", lives,
+          "WeaponLevel:", weaponlevel)
+def daytwo():
+    global lives, hunger, score, weaponlevel, materials, days, shelterlevel
+
+    path = 0
+    prev_choice = None
+
+    while path < 2:
+        if path == 0:
+            print("\n--- Day Two: ---")
+            print("You wake up the next morning and decide to search for foodthe island. You go into the jungle to see what animals/plants are here")
+            direction = input("You come to a fork. Do you go left or right? ")
+        else:
+            again = input("Do you want to explore the other path as well? (yes/no) ")
+            if again != "yes":
+                print("You end the day here.")
+                break
+            direction = "left" if prev_choice == "right" else "right"
+
+        prev_choice = direction
+        path += 1
+
+        if direction == "left":
+            print("\nYou head down the left path and hear rustling in the bushes.")
+            print("A snake appears! You are stuck on what to do. Do you climb a tree, run away, jump in water, or fight")
+            
+            choice = input("What is your choice tree, run, water, or fight? ")
+            if choice == "tree":
+                print("You climb the tree but the snake climbs with you at a faster pace. The snake bites you and you lose a life")
+                lives -= 1
+                check()
+            elif choice == "run":
+                print("You were able to outrun the snake However you're tired and hungry.")
+                score += 100
+                hunger -= 1
+            elif choice == "water":
+                print("You dive into the river and this snake cant swim.")
+                score += 300
+            elif choice == "fight":
+                if weaponlevel > 4:
+                    print("You slay the snake with your weapon unharmed.")
+                    score += 400
+                else:
+                    print("You fight unarmed and the snake bites you due to your inablity to deal a finishing blow.")
+                    lives -= 1
+                    check()
+            else:
+                print("Invalid choice; no action taken.")
+
+        elif direction == "right":
+            print("\nYou walk the right path and see vultures overhead.")
+            print("You notice it is because their is a dying pig ahead.")
+            print("You decide you can either finish off the pig, wait until the vultures leave or just leave it alone")
+            choice = input("What is your choice, fight, wait, or leave? ")
+            if choice == "fight":
+                randy()
+                if weaponlevel > 4:
+                    print("You kill the pig swiftly and bring back meat.")
+                    score += 500
+                    hunger += 4
+                else:
+                    if luck == 1:
+                        print("By luck, the pig trips; you finish it off by hand.")
+                        score += 350
+                        hunger += 4
+                    else:
+                        print("It takes hours, but you eventually get meat.")
+                        score += 300
+                        hunger += 2
+            elif choice == "wait":
+                print("Vultures finish the pig; you salvage what you can.But you also figure you can make a small knife with the teeth")
+                score += 350
+                hunger += 1
+                weaponlevel += 4
+                materials.append("pig knife")
+            elif choice == "leave":
+                print("You leave the pig and find edible berries instead.")
+                score += 400
+                hunger += 1.5
+                randy()
+                if luck == 1:
+                    print("A lynx befriends you and becomes your ally!")
+                    materials.append("lynx")
+                    weaponlevel += 5
+            else:
+                print("Invalid choice; no action taken.")
+
+        else:
+            print("Invalid direction; you lose time wandering.")
+            hunger -= 1
+            check()
+    print("After your adventure(s) you are exhausted and head back to camp your day is over")
+    check()
+    days += 1
+    update()
+
+def daythree(): 
+    global lives, hunger, score, weaponlevel, materials, days, shelterlevel
+    randy()
+    print("It is day three and after your hectic day you decide to go to the beach to relax and wash up.")
+    print("You also decide to go fishing in the ocean.")
+    if weaponlevel > 9:
+        print("With your advanced weaponry you caught eight fish.")
+        hunger += 8
+        score += 500
+    elif weaponlevel > 6:
+        print("With your good weaponry you caught six fish.")
+        hunger += 6
+        score += 400
+    elif weaponlevel > 3:
+        print("With your basic weaponry you caught three fish.")
+        hunger += 3
+        score += 300
+    else:
+        print("With your poor weaponry you caught one fish.")
+        hunger += 1
+        score += 200
+
+    print("While in the ocean you see a chest on the ocean floor and you open it.")
+    if luck == 1:
+        print("Unluckily, there was nothing in the chest.")
+    elif luck == 2:
+        print("It is your lucky day— you found a machete!")
+        materials.append("machete")
+        score += 100
+        weaponlevel += 7
+    elif luck == 3:
+        print("You found canned food that has not expired.")
+        hunger += 3
+        score += 100
+    elif luck == 4:
+        print("A strange gas is released from the chest.")
+        print("This gas makes you violently throw up, losing nutrients.")
+        hunger -= 2
+        check()
+
+    print("You lose track of time; it is late and dark.")
+    print("You make a torch with your flint, but it is still hard to see.")
+    print("A group of bats starts swooping down to attack you.")
+    print("What do you plan on doing: fight back, run away, hide, or distract them with food?")
+    bats = input("What is your choice: fight, run, hide, or food? ")
+    randy()
+
+    if bats == "fight":
+        if weaponlevel > 9:
+            print("With your advanced weaponry you fend off the bats; they fly away.")
+            score += 500
+        elif weaponlevel > 6:
+            print("With your good weaponry you fend off the bats after a struggle.")
+            score += 400
+        elif weaponlevel > 3:
+            print("With your weaponry you barely fend off the bats; you burn a lot of energy.")
+            hunger -= 2
+            score += 100
+            check()
+        else:
+            print("You cannot fend off the bats; they overwhelm you. You lose a life.")
+            lives -= 1
+            check()
+
+    elif bats == "run":
+        print("As you run, the bats chase you using echolocation.")
+        if shelterlevel > 9:
+            print("They follow you to the cave and communicate with the other bats to attack you as well.")
+            batt = input("Do you fight back, run, or do nothing? ")
+            if batt == "fight":
+                if weaponlevel > 9:
+                    print("You drive them off with your advanced weaponry.")
+                    score += 500
+                    hunger -= 1
+                elif weaponlevel > 6:
+                    print("You fend them off with your good weaponry.")
+                    score += 400
+                    hunger -= 2
+                elif weaponlevel > 3:
+                    print("You barely fend them off, expending much energy.")
+                    hunger -= 3
+                    score += 100
+                    check()
+                else:
+                    print("You cannot fend them off; you lose a life.")
+                    lives -= 1
+                    check()
+                print("You have no shelter, so you make a makeshift tent.")
+            elif batt == "run":
+                print("You run away; eventually the bats stop chasing you.")
+                print("You have no shelter, so you make a makeshift tent.")
+                score += 100
+                hunger -= 3
+                check()
+            elif batt == "nothing":
+                print("The bats swarm and attack you. You lose a life.")
+                lives -= 1
+                check()
+            else:
+                print("Invalid choice; the bats swarm and you lose a life.")
+                lives -= 1
+                check()
+            shelterlevel = 0
+        else:
+            print("You reach your shelter; bats try to attack it but fail.")
+            print("Your shelter loses some sturdiness.")
+            shelterlevel -= 2
+            score += 150
+
+    elif bats == "hide":
+        print("You hide in a bush, then in a tree but anywhere you go the bats find you.")
+        print("They harass you all night. You are tired and hungry.")
+        hunger -= 3
+        check()
+
+    elif bats == "food":
+        if luck == 4:
+            print("You lay out food; the bats approach but dislike it and chase you.")
+            print("You get a head start and evade them after an hour.")
+            hunger -= 3
+            check()
+        else:
+            print("The bats are distracted by the food and you escape safely.")
+            hunger -= 2
+            check()
+
+    else:
+        print("Invalid choice; you lose three hunger for indecision.")
+        hunger -= 3
+        check()
+
+    update()
+    days += 1
+    print("Day three is now over.")
+
+def dayfour():
+    global lives, hunger, score, weaponlevel, materials, days, shelterlevel
+    randy()
+    path = 0
+
+    print("You wake up on your fourth day and notice storm clouds gathering.")
+    print("It looks like rain won’t arrive until tonight or tomorrow morning.")
+    print("You can take up to two actions today:")
+    print("  • Look for food")
+    print("  • Search for weapons or other materials")
+    print("  • Gather materials to improve your shelter")
+    print("  • Wander around and hope to find something useful\n")
+
+    choice = input("What is your choice: food, weapon, shelter, or random? ")
+
+    while path < 2:
+        if choice == "food":
+            print("\nWhile searching for food, you must choose to hunt, scavenge, or fish.")
+            food = input("What is your choice: hunt, scavenge, or fish? ")
+            if food == "hunt":
+                print("You track a deer and spot a fawn alone.")
+                if weaponlevel > 12:
+                    print("You subdue the fawn easily with your advanced weaponry.")
+                    score += 500
+                    hunger += 8
+                elif weaponlevel > 8:
+                    print("You manage to subdue it with effort.")
+                    score += 400
+                    hunger += 6
+                elif weaponlevel > 5:
+                    print("You catch it after a struggle, losing energy.")
+                    score += 300
+                    hunger += 4
+                else:
+                    print("You eventually take it down but burn most of your energy.")
+                    score += 200
+                    hunger += 2
+            elif food == "scavenge":
+                if luck == 2:
+                    print("Lucky day! You find injured squirrels and edible berries.")
+                    hunger += 8
+                    score += 500
+                else:
+                    print("You gather berries that will last you a day.")
+                    hunger += 5
+                    score += 400
+            elif food == "fish":
+                if weaponlevel > 9:
+                    print("With advanced weaponry you catch eight fish.")
+                    hunger += 8
+                    score += 500
+                elif weaponlevel > 6:
+                    print("You catch six fish.")
+                    hunger += 6
+                    score += 400
+                elif weaponlevel > 3:
+                    print("You catch three fish.")
+                    hunger += 3
+                    score += 300
+                else:
+                    print("You catch one fish.")
+                    hunger += 1
+                    score += 200
+            else:
+                print("Invalid choice; you find almost nothing.")
+                hunger += 1
+            path += 1
+
+        elif choice == "weapon":
+            if luck == 1:
+                print("\nLucky! You find flexible twigs to craft a bow and arrows.")
+                score += 500
+                weaponlevel += 7
+                materials.append("bow")
+            else:
+                print("\nYou fashion a spear from a branch and sharp stones.")
+                score += 400
+                weaponlevel += 5
+                materials.append("spear")
+            path += 1
+
+        elif choice == "shelter":
+            if luck == 2:
+                print("\nYou salvage a tarp from debris and gather stones for support.")
+                score += 500
+                shelterlevel += 7
+            else:
+                print("\nYou collect branches and rocks to reinforce your shelter.")
+                score += 400
+                shelterlevel += 5
+            path += 1
+
+        elif choice == "random":
+            if luck == 1:
+                print("\nYou stumble on free-range chickens and catch one.")
+                score += 400
+                hunger += 5
+            elif luck == 2:
+                print("\nYou find a rusted helmet that you can use for extra protection and an extra life!")
+                score += 400
+                weaponlevel += 2
+                lives += 1
+                materials.append("helmet")
+            elif luck == 3:
+                print("\nYou salvage a wooden plank from a wreck for your shelter.")
+                score += 400
+                shelterlevel += 6
+            else:
+                print("\nYou find nothing and lose some energy.")
+                hunger -= 1
+                check()
+            path += 1
+
+        else:
+            print("\nInvalid choice; you waste time and gain nothing.")
+            path += 1
+
+        if path < 2:
+            again = input("\nDo you want to take another action? (yes/no) ")
+            if again != "yes":
+                print("You end the day here.")
+                break
+            choice = input("What is your next choice: food, weapon, shelter, or random? ")
+
+    print("\nAfter your long day you return to your shelter as rain begins to fall.")
+    print("You're too tired to make further preparations and settle in for the night.")
+    check()
+    update()
+    days += 1
+
+def dayfive():
+    global lives, hunger, score, weaponlevel, materials, days, shelterlevel
+    randy()
+    print("The storm is raging on.")
+    if shelterlevel > 10:
+        print("Although the storm rages, your shelter holds with only minor damage.")
+        score += 500
+        shelterlevel -= 1
+        update()
+    elif shelterlevel > 6:
+        print("Your shelter was well built and kept you safe, though it took heavy damage.")
+        score += 400
+        shelterlevel -= 2
+        hunger -= 1
+        check()
+        update()
+    elif shelterlevel > 3:
+        print("Your shelter cannot withstand the storm and collapses partly, keeping you up all night.")
+        score += 200
+        shelterlevel -= 3
+        hunger -= 3
+        check()
+        update()
+    else:
+        print("Your shelter is destroyed. You have nowhere to sleep during the storm.")
+        shelterlevel = 0
+        hunger -= 5
+        lives -= 1
+        check()
+        update()
+
+    randy()
+    print("\nIn the morning you realize your flint was lost in the storm.")
+    print("Now you cannot cook your meat.")
+    print("You can either look for the flint, try to start a new fire, or do nothing and forage for non-meat food.")
+    fire = input("What is your choice: look, fire, or nothing? ")
+
+    if fire == "look":
+        if luck == 4:
+            print("Lucky you! You find your flint under some leaves.")
+            score += 500
+        else:
+            print("After hours of searching you cannot find the flint.")
+            print("You must discard some of your meat.")
+            hunger -= 2
+            check()
+
+    elif fire == "fire":
+        print("You attempt to start a fire again.")
+        print("Do you use rubbing sticks, striking stones, or both?")
+        method = input("What do you choose: sticks, rocks, or both? ")
+        if method == "sticks":
+            if luck == 2:
+                print("The sticks are too wet; you fail and lose energy.")
+                hunger -= 2
+                check()
+            else:
+                print("You manage to start a fire with sticks!")
+                score += 500
+
+        elif method == "rocks":
+            if luck == 1:
+                print("You spark a fire by striking rocks!")
+                score += 200
+            else:
+                print("You cannot get a spark with the rocks.")
+                hunger -= 2
+
+        elif method == "both":
+            if luck % 2 == 0:
+                print("You successfully start a fire using both sticks and stones.")
+                score += 400
+            else:
+                print("You fail to start a fire even with both methods.")
+                score += 200
+                hunger -= 2
+                check()
+        else:
+            print("Invalid method; you lose time and energy.")
+            hunger -= 2
+            check()
+
+    elif fire == "nothing":
+        print("You spend the day foraging for berries and herbs.")
+        hunger += 4
+
+    else:
+        print("Invalid choice; you waste the day and lose energy.")
+        hunger -= 3
+        check()
+
+    days += 1
+    print("Day five is now over.")
+    check()
+    update()
+    
+def final():
+    global score, days, materials, weaponlevel, hunger, lives
+    print("You wake up this morning to the sound of propellers and an engine, and you look up to see a helicopter.")
+    print("However, you need to get the attention of the plane.")
+    if "fire" in materials:
+        score += 400
+        print("You build a bonfire with the fire you made yesterday, and the helicopter sees you.")
+        print("Congratulations, you survived the game!")
+        print("Final stats -> Days Survived:", days, "Materials:", materials, "WeaponLevel:", weaponlevel)
+        sys.exit()
+    print("Since you cannot make fire, you must get creative.")
+    print("You can climb the tallest mountain and wave leaves, or go to the beach and draw a message in the sand.")
+    choice = input("What do you choose: climb or draw? ")
+    if choice == "climb":
+        hunger -= 2
+        score += 500
+        check()
+        print("You wave branches from the mountaintop until the helicopter notices you.")
+        print("Congratulations, you survived the game!")
+        print("Final stats -> Days Survived:", days, "Materials:", materials, "WeaponLevel:", weaponlevel)
+        sys.exit()
+    elif choice == "draw":
+        score += 300
+        check()
+        print("You draw HELP in the sand; the helicopter spots it and rescues you.")
+        print("Congratulations, you survived the game!")
+        print("Final stats -> Days Survived:", days, "Materials:", materials, "WeaponLevel:", weaponlevel)
+        sys.exit()
+    else:
+        print("Invalid choice; the helicopter leaves before noticing you.")
+        lives -= 1
+        check()
+        print("Game over.")
+        sys.exit()
+            
+start()
+daytwo()
+daythree()
+dayfour()
+dayfive()
+final()
+
+#---------------------------------------Code in Renpy Langauge---------------------------------------------------
+init python:
+    import random, sys
+    from renpy.display import im
+
+    def scaled_bg(fn):
+        return im.Scale(
+            fn,
+            renpy.config.screen_width,
+            renpy.config.screen_height
+        )
+
+    def randy():
+        global luck
+        luck = random.randint(1, 4)
+
+    def check():
+        if hunger < 1 or lives < 0:
+            renpy.say(None, "Game over.")
+            renpy.say(None, f"Final stats -> Days Survived: {days}")
+            renpy.say(None, f"Materials: {materials}")
+            renpy.say(None, f"WeaponLevel: {weaponlevel}")
+            renpy.say(None, f"ShelterLevel: {shelterlevel}")
+            sys.exit()
+
+    def update():
+        renpy.say(
+            None,
+            f"End of day stats -> Hunger: {hunger} Lives: {lives} "
+            f"WeaponLevel: {weaponlevel} ShelterLevel: {shelterlevel}"
+        )
+# 2) Image declarations — now use scaled_bg() for backgrounds
+image bg punk           = scaled_bg("images/island.jpg")
+image bg jungle         = scaled_bg("images/jungle.jpg")
+image bg beach          = scaled_bg("images/beach.jpg")
+image bg cave           = scaled_bg("images/caves.png")
+image bg storm          = scaled_bg("images/storm.jpg")
+
+# Sprites don’t need scaling
+image sprite hero       = "images/human.jpg"
+image sprite snake      = "images/snake.jpg"
+image sprite pig        = "images/pigs.jpg"
+image sprite bats       = "images/bats.jpg"
+image sprite chest      = "images/chestpng.png"
+image sprite fire       = "images/fire.jpg"
+image sprite nofire     = "images/nofire.jpg"
+image sprite helicopter = "images/helicopter.png"
+
+# 3) Default variables
+default score = 0
+default hunger = 6
+default lives = 2
+default weaponlevel = 0
+default materials = []
+default days = 0
+default shelterlevel = 0
+default luck = 0
+
+
+# 4) Labels
+
+label start:
+    scene bg punk with fade
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    "Before starting the game, please enter all your answers in lowercase. All your answers sould be 1 word as described in the prompt\n. Failure to do so may result in loss of hunger/lives"
+    "Welcome to Punk Hazard, a completely uncivilized island."
+    "You are abandoned alone with a water bottle and flint and you are uncertain when help will arrive."
+    "You start with two lives and a hunger level of six."
+    "If your lives or hunger reach zero, the game ends, so be mindful."
+    "As you wash up on shore you notice how beautiful and desserted the island is. Then you proceed to enter the forest"
+    "While on this path, you find a river(fresh water source) and you decide to set up camp here."
+    "On your quest to make a shelter you see uprooted trees from a storm which could make a good shlter,"
+    "and scattered rocks and stones across the island.\n"
+    "You also think you could possibly find better alternatives if you keep looking"
+
+    $ valid = ("tree", "rock", "nothing", "both")
+    $ choice = ""
+    while choice not in valid:
+        $ choice = renpy.input("What will you choose to do: tree, rock, nothing, or both? ").strip().lower()
+        if choice not in valid:
+            "Invalid choice. Please enter exactly one of: tree, rock, nothing, both."
+
+    if choice == "tree":
+        "After gathering broken tree branches, you build a solid shelter."
+        "You also find a dead family of squirrels you can use for food."
+        $ score += 500
+        $ hunger += 3
+        $ shelterlevel += 5
+        "After finding food, you use the flint to build a fire and cook your meal."
+        "You go to sleep well-fed."
+    elif choice == "rock":
+        "You decide to build your shelter with rocks."
+        "It provides a strong structure, though there are some leaks. You also find some berries underneath rocks."
+        $ score += 300
+        $ hunger += 2
+        $ shelterlevel += 3
+    elif choice == "nothing":
+        "While searching for better materials you were unimpressed; you decide to seek refuge in a cave and use it as a base."
+        $ score += 100
+        $ hunger -= 3
+        $ shelterlevel += 10
+        "Unfortunately since it took a long time to find shelter, you go to bed hungry."
+    else:
+        "You craft an epic shelter with both trees and rocks."
+        "You also fashion a dagger for a weapon."
+        $ score += 500
+        $ hunger -= 4
+        $ weaponlevel += 5
+        $ shelterlevel += 8
+        $ materials.append("dagger")
+
+    $ days += 1
+    $ update()
+    $ python: check()
+
+    jump daytwo
+
+label daytwo:
+    scene bg jungle with fade
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    $ randy()
+    "\n--- Day Two: ---"
+    $ path = 0
+    $ prev = None
+
+    while path < 2:
+        if path == 0:
+            "You wake up the next morning and decide to search for food on the island. You go into the jungle to see what animals/plants are here"
+            $ direction = renpy.input("You come to a fork. Do you go left or right? ").strip().lower()
+        else:
+            $ again = renpy.input("Do you want to explore the other path as well? (yes/no) ").strip().lower()
+            if again != "yes":
+                "You end the day here."
+                jump daythree
+            $ direction = "left" if prev=="right" else "right"
+
+        $ prev = direction
+        $ path += 1
+
+        if direction == "left":
+            show sprite snake
+            "\nYou head down the left path and hear rustling in the bushes."
+            "A snake appears! You are stuck on what to do. Do you climb a tree, run away, jump in water, or fight"
+            $ choice = renpy.input("What is your choice tree, run, water, or fight? ").strip().lower()
+
+            if choice == "tree":
+                "You climb the tree but the snake climbs with you at a faster pace. The snake bites you and you lose a life"
+                $ lives -= 1
+                $ check()
+            elif choice == "run":
+                "You were able to outrun the snake However you're tired and hungry."
+                $ score += 100
+                $ hunger -= 1
+            elif choice == "water":
+                "You dive into the river and this snake cant swim."
+                $ score += 300
+            else:
+                if weaponlevel > 4:
+                    "You slay the snake with your weapon unharmed."
+                    $ score += 400
+                else:
+                    "You fight unarmed and the snake bites you due to your inablity to deal a finishing blow."
+                    $ lives -= 1
+                    $ check()
+
+            hide sprite snake
+
+        else:
+            show sprite pig
+            "\nYou walk the right path and see vultures overhead."
+            "You notice it is because their is a dying pig ahead."
+            "You decide you can either finish off the pig, wait until the vultures leave or just leave it alone"
+            $ choice = renpy.input("What is your choice, fight, wait, or leave? ").strip().lower()
+
+            if choice == "fight":
+                if weaponlevel > 4:
+                    "You kill the pig swiftly and bring back meat."
+                    $ score += 500
+                    $ hunger += 4
+                elif luck == 1:
+                    "By luck, the pig trips; you finish it off by hand."
+                    $ score += 350
+                    $ hunger += 4
+                else:
+                    "It takes hours, but you eventually get meat."
+                    $ score += 300
+                    $ hunger += 2
+            elif choice == "wait":
+                "Vultures finish the pig; you salvage what you can.But you also figure you can make a small knife with the teeth"
+                $ score += 350
+                $ hunger += 1
+                $ weaponlevel += 4
+                $ materials.append("pig knife")
+            else:
+                "You leave the pig and find edible berries instead."
+                $ score += 400
+                $ hunger += 1
+                $ randy()
+                if luck == 1:
+                    "A lynx befriends you and becomes your ally!"
+                    $ materials.append("lynx")
+                    $ weaponlevel += 5
+
+            hide sprite pig
+
+    "After your adventure(s) you are exhausted and head back to camp your day is over"
+    $ days += 1 
+    $ update() 
+    $ check()
+    jump daythree
+
+label daythree:
+    scene bg beach with fade
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    $ randy()
+    "It is day three and after your hectic day you decide to go to the beach to relax and wash up"
+    "You also decide to go fishing in the ocean"
+    if weaponlevel > 9:
+        "With your advanced weaponry you caught eight fish."
+        $ hunger += 8
+        $ score += 500
+    elif weaponlevel > 6:
+        "With your good weaponry you caught six fish."
+        $ hunger += 6
+        $ score += 400
+    elif weaponlevel > 3:
+        "With your basic weaponry you caught three fish."
+        $ hunger += 3
+        $ score += 300
+    else:
+        "With your poor weaponry you caught one fish."
+        $ hunger += 1
+        $ score += 200
+
+    "While in the ocean you see a chest on the ocean floor and you open it"
+    show sprite chest
+    $ randy()
+    if luck == 1:
+        "Unluckily, there was nothing in the chest"
+    elif luck == 2:
+        "It is your lucky day— you found a machete!"
+        $ materials.append("machete")
+        $ score += 100
+        $ weaponlevel += 7
+    elif luck == 3:
+        "You found canned food that has not expired"
+        $ hunger += 3
+        $ score += 100
+    else:
+        "A strange gas is released from the chest."
+        "This gas makes you violently throw up, losing nutrients"
+        $ hunger -= 2
+        $ check()
+    hide sprite chest
+
+    "You lose track of time; it is late and dark"
+    "You make a torch with your flint, but it is still hard to see"
+    scene bg jungle with fade 
+    show sprite bats
+    "A group of bats starts swooping down to attack you"
+    "What do you plan on doing: fight back, run away, hide, or distract them with food"
+    $ bats = renpy.input("What is your choice: fight, run, hide, or food? ").strip().lower()
+    $ randy()
+
+    if bats == "fight":
+        if weaponlevel > 9:
+            "With your advanced weaponry you fend off the bats; they fly away"
+            $ score += 500
+        elif weaponlevel > 6:
+            "With your good weaponry you fend off the bats after a struggle"
+            $ score += 400
+        elif weaponlevel > 3:
+            "With your weaponry you barely fend off the bats; you burn a lot of energy"
+            $ hunger -= 2
+            $ score += 100
+            $ check()
+        else:
+            "You cannot fend off the bats; they overwhelm you. You lose a life"
+            $ lives -= 1
+            $ check()
+
+    elif bats == "run":
+        "As you run, the bats chase you using echolocation"
+        if shelterlevel > 9:
+            scene bg cave
+            hide sprite bats
+            "They follow you to the cave and communicate with the other bats to attack you as well"
+            $ batt = renpy.input("Do you fight back, run, or do nothing? ").strip().lower()
+            if batt == "fight":
+                if weaponlevel > 9:
+                    "You drive them off with your advanced weaponry"
+                    $ score += 500
+                    $ hunger -= 1
+                elif weaponlevel > 6:
+                    "You fend them off with your good weaponry"
+                    $ score += 400
+                    $ hunger -= 2
+                elif weaponlevel > 3:
+                    "You barely fend them off, expending much energy"
+                    $ hunger -= 3
+                    $ score += 100
+                    $ check()
+                else:
+                    "You cannot fend them off; you lose a life"
+                    $ lives -= 1
+                    $ check()
+                "You have no shelter, so you make a makeshift tent"
+            elif batt == "run":
+                "You run away; eventually the bats stop chasing you"
+                "You have no shelter, so you make a makeshift tent"
+                $ score += 100
+                $ hunger -= 3
+                $ check()
+            else:
+                "The bats swarm and attack you. You lose a life"
+                $ lives -= 1
+                $ check()
+            $ shelterlevel = 0
+        else:
+            hide sprite bats
+            "You reach your shelter; bats try to attack it but fail"
+            "Your shelter loses some sturdiness"
+            $ shelterlevel -= 2
+            $ score += 150
+
+    elif bats == "hide":
+        hide sprite bats
+        "You hide in a bush, then in a tree but anywhere you go the bats find you"
+        "They harass you all night. You are tired and hungry"
+        $ hunger -= 3
+        $ check()
+
+    else:
+        hide sprite bats
+        "Invalid choice; you lose three hunger for indecision"
+        $ hunger -= 3
+        $ check()
+
+    $ days += 1
+    $ update()
+    jump dayfour
+
+label dayfour:
+    scene bg punk with fade
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    $ randy()
+    "You wake up on your fourth day and notice storm clouds gathering"
+    "It looks like rain won’t arrive until tonight or tomorrow morning"
+    "You can take up to two actions today:"
+    "  • Look for food"
+    "  • Search for weapons or other materials"
+    "  • Gather materials to improve your shelter"
+    "  • Wander around and hope to find something useful\n"
+
+    $ path = 0
+    while path < 2:
+        $ choice = renpy.input("What is your choice: food, weapon, shelter, or random? ").strip().lower()
+        if choice == "food":
+            "While searching for food, you must choose to hunt, scavenge, or fish"
+            $ food = renpy.input("What is your choice: hunt, scavenge, or fish? ").strip().lower()
+            if food == "hunt":
+                scene bg jungle
+                "You track a deer and spot a fawn alone"
+                if weaponlevel > 12:
+                    "You subdue the fawn easily with your advanced weaponry"
+                    $ score += 500
+                    $ hunger += 8
+                elif weaponlevel > 8:
+                    "You manage to subdue it with effort"
+                    $ score += 400
+                    $ hunger += 6
+                elif weaponlevel > 5:
+                    "You catch it after a struggle, losing energy"
+                    $ score += 300
+                    $ hunger += 4
+                else:
+                    "You eventually take it down but burn most of your energy"
+                    $ score += 200
+                    $ hunger += 2
+            elif food == "scavenge":
+                scene bg jungle
+                $ randy()
+                if luck == 2:
+                    "Lucky day! You find injured squirrels and edible berries"
+                    $ hunger += 8
+                    $ score += 500
+                else:
+                    "You gather berries that will last you a day"
+                    $ hunger += 5
+                    $ score += 400
+            elif food == "fish":
+                scene bg beach
+                if weaponlevel > 9:
+                    "With advanced weaponry you catch eight fish"
+                    $ hunger += 8
+                    $ score += 500
+                elif weaponlevel > 6:
+                    "You catch six fish"
+                    $ hunger += 6
+                    $ score += 400
+                elif weaponlevel > 3:
+                    "You catch three fish"
+                    $ hunger += 3
+                    $ score += 300
+                else:
+                    "You catch one fish"
+                    $ hunger += 1
+                    $ score += 200
+            else:
+                "Invalid choice you find almost nothing"
+                $ hunger += 1
+            $ path += 1
+
+        elif choice == "weapon":
+            $ randy()
+            if luck == 1:
+                "Lucky! You find flexible twigs to craft a bow and arrows"
+                $ score += 500
+                $ weaponlevel += 7
+                $ materials.append("bow")
+            else:
+                "You fashion a spear from a branch and sharp stones"
+                $ score += 400
+                $ weaponlevel += 5
+                $ materials.append("spear")
+            $ path += 1
+
+        elif choice == "shelter":
+            $ randy()
+            if luck == 2:
+                "You salvage a tarp from debris and gather stones for support"
+                $ score += 500
+                $ shelterlevel += 7
+            else:
+                "You collect branches and rocks to reinforce your shelter"
+                $ score += 400
+                $ shelterlevel += 5
+            $ path += 1
+
+        elif choice == "random":
+            $ randy()
+            if luck == 1:
+                "You stumble on free-range chickens and catch one."
+                $ score += 400
+                $ hunger += 5
+            elif luck == 2:
+                "You find a rusted helmet that you can use for extra protection and an extra life!"
+                $ score += 400
+                $ weaponlevel += 2
+                $ lives += 1
+                $ materials.append("helmet")
+            elif luck == 3:
+                "You salvage a wooden plank from a wreck for your shelter."
+                $ score += 400
+                $ shelterlevel += 6
+            else:
+                "You find nothing and lose some energy."
+                $ hunger -= 1
+                $ check()
+            $ path += 1
+
+        else:
+            "Invalid choice; you waste time and gain nothing"
+            $ path += 1
+
+        if path < 2:
+            $ again = renpy.input("\nDo you want to take another action? (yes/no) ").strip().lower()
+            if again != "yes":
+                "You end the day here."
+                jump dayfive
+
+    $ days += 1 
+    $ check()
+    $ update()
+    jump dayfive
+
+label dayfive:
+    scene bg storm with fade
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    $ randy()
+    "--- Day five: Storm Night ---"
+    if shelterlevel > 10:
+        "Although the storm rages, your structure is strong enough to keep you warm and safe with minor damage"
+        $ score += 500
+        $ shelterlevel -= 1
+        $ update()
+    elif shelterlevel > 6:
+        "Your structure was well built however the storm i too strong however it kept you safe"
+        $ score += 400
+        $ shelterlevel -= 2
+        $ hunger -= 1
+        $ check()
+        $ update()
+    elif shelterlevel > 3:
+        "You structure was not strong enough to withsand the storm and it kept you up all night"
+        $ score += 200
+        $ shelterlevel -= 3
+        $ hunger -= 3
+        $ check()
+        $ update()
+    else:
+        "Your structure was compromised and utterly destroyed. You stayed up all night because yoy had nowhere to sleep"
+        $ shelterlevel = 0
+        $ hunger -= 5
+        $ lives -= 1
+        $ check()
+        $ update()
+    scene bg punk
+    "In the morning you also realized you lost your flint during the storm"
+    "NOw you cannot eat your meat"
+    "You can either, look for the flint, start your own fire, nothing try to find none meat options"
+    $ fire = renpy.input("What is your choice: look, fire, or nothing? ").strip().lower()
+    $ randy()
+    if fire == "look":
+        if luck == 4:
+            show sprite fire
+            "Lucky you, you were able to find your flint under some leaves"
+            $ score += 500
+        else:
+            show sprite nofire
+            "AFter hours of searching you were unable to find your flint"
+            "Forcing you to throw out some of the meat you have"
+            $ hunger -= 2
+            $ check()
+
+    elif fire == "fire":
+        "NOw you are stuck on how you are going to make this fire"
+        "Are you going to try to use rubbing sticks together, shredding rocks, use both sticks and stones"
+        $ method = renpy.input("What do you choose: sticks, rocks, or both? ").strip().lower()
+        if method == "sticks":
+            if luck == 2:
+                show sprite nofire
+                "The sticks were too wet making it hard to start a flame"
+                $ hunger -= 2
+                $ check()
+                $ score += 400
+            else:
+                show sprite fire
+                "Success yoy were able to start a fire"
+                $ score += 500
+                $ materials.append("fire")
+
+        elif method == "rocks":
+            if luck == 1:
+                show sprite fire
+                "You were luckily able to start the fire"
+                $ score += 200
+                $ materials.append("fire")
+            else:
+                show sprite nofire
+                "You were not able to start a fire with the rocks you couldnt get the right angle"
+                $ hunger -= 2
+
+        else:
+            if luck % 2 == 0:
+                show sprite fire
+                "Hazza you were able to start a fire with the rocks and sticks"
+                $ score += 400
+                $ materials.append("fire")
+            else:
+                show sprite nofire
+                "Unluckily you couldnt get the fire to start"
+                $ score += 200
+                $ hunger -= 2
+                $ check()
+
+    elif fire == "nothing":
+        "YOu spend the whole day scavenging for berries and herbs"
+        $ hunger += 4
+    else:
+        "Invalid choice you lose 3 hunger for not choosing an available option"
+        $ hunger -= 3
+        $ check()
+
+    $ days += 1
+    $ check()
+    "Day five is now over."
+    $ update()
+    jump final
+
+label final:
+    scene bg punk
+    show sprite hero at Position(xalign=0.5, yalign=0.5)
+
+    "You wake up this morning to the sound of propellers and an engine, and you look up to see a helicopter."
+    "However, you need to get the attention of the plane."
+    if "fire" in materials:
+        show sprite fire
+        $ score += 400
+        "You build a bonfire with the fire you made yesterday, and the helicopter sees you."
+        "Congratulations, you survived the game!"
+        "Final stats -> Days Survived: [days] Materials: [materials] WeaponLevel: [weaponlevel] Score: [score]"
+    else:
+        "Since you cannot make fire yesterday you have to get creative"
+        "You have decesion to either climb the tallest mountain and wave a branch you found with alot of leaves rsulting in alot of energy"
+        "Or go to the beach and try to spell out words in the sand"
+        $ finale = renpy.input("What do you choose: climb or draw? ").strip().lower()
+        if finale == "climb":
+            $ hunger -= 2
+            $ score += 500
+            $ check()
+            "Congratulations, you survived the game!"
+            "Final stats -> Days Survived: [days] Materials: [materials] WeaponLevel: [weaponlevel] Score: [score]"
+        else:
+            "Congratulations, you survived the game!"
+            "Final stats -> Days Survived: [days] Materials: [materials] WeaponLevel: [weaponlevel] Score: [score]"
+
+    return
+
